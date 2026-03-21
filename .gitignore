@@ -1,0 +1,9 @@
+# Binary
+sns-sqs-demo
+
+# Go
+*.out
+*.test
+
+# LocalStack
+.localstack/
