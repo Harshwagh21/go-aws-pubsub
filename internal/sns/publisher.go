@@ -27,18 +27,17 @@ func (s *SNSService) CreateTopic(ctx context.Context) (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("failed to create topic: %w", err)
 	}
-	fmt.Printf("SNS Topic Created: %s\n", *output.TopicArn)
 	return *output.TopicArn, nil
 }
 
 func (s *SNSService) Publish(ctx context.Context, TopicArn, message string) error {
-	output, err := s.client.Publish(ctx, &sns.PublishInput{
+	_ , err := s.client.Publish(ctx, &sns.PublishInput{
 		TopicArn: aws.String(TopicArn),
 		Message:  aws.String(message),
 	})
 	if err != nil {
 		return fmt.Errorf("Failed to Publish: %w", err)
 	}
-	fmt.Printf("Publish Successful | Message ID: %s\n", *output.MessageId)
+
 	return nil
 }

@@ -45,13 +45,17 @@ var (
 			Padding(0, 2)
 
 	subtitleStyle = lipgloss.NewStyle().
-		Foreground(lipgloss.Color("#A0A0A0")).
-		Italic(true).
-		MarginLeft(1)
+			Foreground(lipgloss.Color("#A0A0A0")).
+			Italic(true).
+			MarginLeft(1)
+
+	inputStyle = lipgloss.NewStyle().
+			Foreground(lipgloss.Color("#7B2FBE")).
+			Bold(true)
 )
 
-func banner(){
-	title :=titleStyle.Render(" AWS Pub/Sub Demo ")
+func Banner() {
+	title := titleStyle.Render(" AWS Pub/Sub Demo ")
 	subTitle := subtitleStyle.Render(" LocalStack • SNS/SQS • Go ")
 
 	fmt.Println()
@@ -63,7 +67,7 @@ func banner(){
 	fmt.Println()
 }
 
-func bar(label string) {
+func Bar(label string) {
 	pb := progressbar.NewOptions(100,
 		progressbar.OptionSetDescription(fmt.Sprintf("  %-40s", label)),
 		progressbar.OptionSetWidth(30),
@@ -82,12 +86,20 @@ func bar(label string) {
 	}
 }
 
-func ok(label, value string) {
+func Ok(label, value string) {
 	fmt.Println(successStyle.Render("  ✓ ") + labelStyle.Render(label+": ") + valueStyle.Render(value))
 }
 
-func fail(label, errMsg string) {
+func Fail(label, errMsg string) {
 	fmt.Println(errorStyle.Render("  ✗ " + label + ": " + errMsg))
+}
+
+func Input(prompt string, dest *string) {
+	fmt.Print(inputStyle.Render("  ➜  " + prompt))
+	fmt.Scanln(dest)
+	if *dest == "" {
+		*dest = "Hello from AWS Pub/Sub Demo!"
+	}
 }
 
 func MessageBox(direction, message string) {
