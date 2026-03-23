@@ -21,7 +21,7 @@ func NewSQSService(cfg aws.Config) *SQSService {
 	}
 }
 
-func (s *SWSService) CreateQueue(ctx context.Context) (string, error) {
+func (s *SQSService) CreateQueue(ctx context.Context) (string, error) {
 	output, err := s.client.CreateQueue(ctx, &sqs.CreateQueueInput{
 		QueueName: aws.String(QueueName),
 	})
@@ -33,7 +33,7 @@ func (s *SWSService) CreateQueue(ctx context.Context) (string, error) {
 }
 
 func (s *SQSService) GetQueueARN(ctx context.Context, queueURL string) (string, error) {
-	output, err := s.client.getQueueAttributes(ctx, &sqs.GetQueueAttributesInput{
+	output, err := s.client.GetQueueAttributes(ctx, &sqs.GetQueueAttributesInput{
 		QueueUrl:       aws.String(queueURL),
 		AttributeNames: []types.QueueAttributeName{"QueueArn"},
 	})
@@ -41,7 +41,7 @@ func (s *SQSService) GetQueueARN(ctx context.Context, queueURL string) (string, 
 		return "", fmt.Errorf("failed to get queue arn: %w", err)
 	}
 
-	return *output.Attributes["QueueArn"], nil
+	return output.Attributes["QueueArn"], nil
 }
 
 func (s *SQSService) ReceiveMessage(ctx context.Context, queueURL string) error {
