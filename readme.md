@@ -1,6 +1,6 @@
-# go-aws-pubsub
+# Pub-Sub Demo using aws sns/sqs
 
-A CLI demo of AWS SNS → SQS pub/sub flow using LocalStack, Go, and Docker — no real AWS account needed.
+A CLI demo of AWS SNS → SQS pub/sub flow using Docker LocalStack, Go, Lipgloss Terminal UI — no real AWS account needed.
 
 ## What This Does
 
@@ -51,7 +51,7 @@ go-aws-pubsub/
 ## Run
 
 ```bash
-# 1. Start LocalStack
+# 1. Start LocalStack (make sure docker is running)
 make up
 
 # 2. Run the app
