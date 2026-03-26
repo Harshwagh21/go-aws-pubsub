@@ -90,7 +90,7 @@ func main() {
 	}
 	if received == "" {
 		ui.MessageBox("Received", "No messages received")
-	}else{
+	} else {
 		ui.MessageBox("Received", received)
 	}
 

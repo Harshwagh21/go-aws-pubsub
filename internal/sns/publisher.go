@@ -31,7 +31,7 @@ func (s *SNSService) CreateTopic(ctx context.Context) (string, error) {
 }
 
 func (s *SNSService) Publish(ctx context.Context, TopicArn, message string) error {
-	_ , err := s.client.Publish(ctx, &sns.PublishInput{
+	_, err := s.client.Publish(ctx, &sns.PublishInput{
 		TopicArn: aws.String(TopicArn),
 		Message:  aws.String(message),
 	})
