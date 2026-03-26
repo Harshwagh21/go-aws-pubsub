@@ -2,6 +2,7 @@ package sqs
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -46,8 +47,8 @@ func (s *SQSService) GetQueueARN(ctx context.Context, queueURL string) (string, 
 func (s *SQSService) ReceiveMessage(ctx context.Context, queueURL string) (string, error) {
 	output, err := s.client.ReceiveMessage(ctx, &sqs.ReceiveMessageInput{
 		QueueUrl:            aws.String(queueURL),
-		MaxNumberOfMessages: 10,
-		WaitTimeSeconds:     1,
+		MaxNumberOfMessages: 1,
+		WaitTimeSeconds:     2,
 	})
 	if err != nil {
 		return "", fmt.Errorf("failed to receive message: %w", err)
@@ -57,5 +58,23 @@ func (s *SQSService) ReceiveMessage(ctx context.Context, queueURL string) (strin
 		return "", nil
 	}
 
-	return *output.Messages[0].Body, nil
+	msg := output.Messages[0]
+
+	_, err = s.client.DeleteMessage(ctx, &sqs.DeleteMessageInput{
+		QueueUrl:      aws.String(queueURL),
+		ReceiptHandle: msg.ReceiptHandle,
+	})
+	if err != nil {
+		return "", fmt.Errorf("failed to delete message: %w", err)
+	}
+
+	var envelope map[string]interface{}
+	if err := json.Unmarshal([]byte(*msg.Body), &envelope); err == nil {
+		pretty, err := json.MarshalIndent(envelope, "  ", "  ")
+		if err == nil {
+			return string(pretty), nil
+		}
+	}
+
+	return *msg.Body, nil
 }

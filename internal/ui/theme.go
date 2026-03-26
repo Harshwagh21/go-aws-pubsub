@@ -29,9 +29,10 @@ var (
 	msgBoxStyle = lipgloss.NewStyle().
 			Border(lipgloss.RoundedBorder()).
 			BorderForeground(lipgloss.Color("#7B2FBE")).
-			Padding(0, 2).
+			Padding(1, 2).
 			MarginTop(1).
-			MarginBottom(1)
+			MarginBottom(1).
+			Width(80)
 
 	doneStyle = lipgloss.NewStyle().
 			Bold(true).
@@ -44,6 +45,13 @@ var (
 			Foreground(lipgloss.Color("#A0A0A0")).
 			Italic(true).
 			MarginLeft(1)
+
+	inputBoxStyle = lipgloss.NewStyle().
+			Border(lipgloss.RoundedBorder()).
+			BorderForeground(lipgloss.Color("#7B2FBE")).
+			Padding(0, 2).
+			MarginTop(1).
+			MarginBottom(1)
 
 	inputStyle = lipgloss.NewStyle().
 			Foreground(lipgloss.Color("#7B2FBE")).
@@ -96,6 +104,7 @@ func Banner() {
 		Render("  ────────────────────────────────────────"))
 	fmt.Println()
 }
+
 func Bar(label string) {
 	pb := progressbar.NewOptions(100,
 		progressbar.OptionSetDescription(fmt.Sprintf("  %-40s", label)),
@@ -124,25 +133,24 @@ func Fail(label, errMsg string) {
 }
 
 func Input(prompt string, dest *string) {
-	promptBox := lipgloss.NewStyle().
-		Border(lipgloss.RoundedBorder()).
-		BorderForeground(lipgloss.Color("#7B2FBE")).
-		Padding(0, 2).
-		Render(inputStyle.Render("➜  " + prompt))
-
-	fmt.Println(promptBox)
+	fmt.Println(inputBoxStyle.Render(inputStyle.Render("➜  " + prompt)))
 	fmt.Print("  ╰─▶ ")
 	scanner := bufio.NewScanner(os.Stdin)
 	scanner.Scan()
 	*dest = scanner.Text()
-
 	if *dest == "" {
 		*dest = "Hello from AWS Pub/Sub Demo!"
 	}
+	fmt.Println()
 }
 
 func MessageBox(direction, message string) {
-	fmt.Println(msgBoxStyle.Render("  " + direction + "\n\n  " + message))
+	wrapped := lipgloss.NewStyle().
+		Width(74).
+		Render(message)
+
+	content := labelStyle.Render(direction) + "\n" + valueStyle.Render(wrapped)
+	fmt.Println(msgBoxStyle.Render(content))
 }
 
 func Done() {
